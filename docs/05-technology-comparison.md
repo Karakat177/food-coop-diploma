@@ -1,8 +1,8 @@
 # Technology Comparison
 
 **Project:** Information system for optimizing collective food purchasing and food redistribution
-**Task:** DIP-7 · **Owner:** Student B · **Status:** Draft v0.2
-**Depends on:** Requirements specification (`06-requirements.md`, DIP-8)
+**Task:** DIP-7 · **Owner:** Student B · **Status:** Draft v0.3
+**Depends on:** Requirements specification (`06-requirements.md`, DIP-8), Existing systems comparison (`04-existing-systems-comparison.md`, DIP-6)
 
 ---
 
@@ -24,6 +24,21 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 | One mobile app for Android and iOS, Kazakh and Russian UI | NFR-01, NFR-12 |
 | Time-based events: pool deadlines, reservation expiry, notifications | FR-13, FR-14, FR-25 |
 | Small team, fixed deadline: technologies must be known to the team and well documented | Project scope |
+
+### Lessons from existing systems (DIP-6)
+
+The existing systems comparison (`04-existing-systems-comparison.md`) shows which features we adopt and what limits current solutions. These findings affect the technical choices below.
+
+| Finding in DIP-6 | System | Technical consequence | Decision |
+|---|---|---|---|
+| Group buying works through a resident leader, one combined order and one pickup point | S3 China community group buying | The core data model is pool → participants → shares → one supplier order. All steps must be consistent | Decision 1 (single transaction in a modular monolith), Decision 3 (relational DB) |
+| Chinese platforms depend on the WeChat ecosystem and WeChat Pay | S3 | Payment must use the dominant local method. In Kazakhstan this is Kaspi, so families need no new wallet. The payment provider is hidden behind an adapter so the platform is not tied to one ecosystem | Decision 6 (Kaspi QR via adapter) |
+| Joint purchases in Kazakhstan are organised manually in messenger groups, with prepayment to one person and disputes | DIP-6 conclusion 2 | A messenger bot was considered as the client, but a standalone app is needed for maps, QR scanning, payment per participant and a readable UI. Automatic share calculation removes disputes | Decision 4 (Flutter app), FR-12 |
+| Surplus food is listed with a limited collection window | S1 Too Good To Go | Reservations must expire automatically at an exact time | Decision 5.2 (scheduled jobs with Quartz) |
+| Offers are shown on a map of nearby listings | S1, S2 OLIO | Indexed distance queries are needed | Decision 3 (PostGIS), Decision 6 (2GIS) |
+| Priority for vulnerable families exists only offline | S5 Food Bank | Status documents must be stored securely with access only for moderators | Decision 3 (object storage with restricted access), NFR-05 |
+| No system offers Kazakh and Russian together with these functions | S1–S3 | Full localisation from the start | Decision 4 (Flutter i18n), NFR-01 |
+| Demand forecasting is used by large platforms | S3 | The proposal (DIP-2) includes a baseline forecast in the MVP, but it is not part of the core purchasing flow | Separate offline Python script (FR-30, priority Should) |
 
 ---
 
@@ -56,7 +71,7 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 | Structure for a modular monolith (15%) | Decision 1 | 5 | 5 | 3 |
 | Libraries: ORM, security/JWT, validation, OpenAPI (15%) | NFR-04, NFR-11 | 5 | 5 | 4 |
 | Development speed (amount of boilerplate) (15%) | Scope | 3 | 5 | 3 |
-| Performance for target load: p95 ≤ 500 ms at 100 users (10%) | NFR-02 | 4 | 4 | 5 |
+| Performance for target load: ≤ 1 s at 100 concurrent requests (10%) | NFR-02 | 4 | 4 | 5 |
 | **Weighted score** | | **4.60** | **4.00** | **3.30** |
 
 **Choice: Java 21 with Spring Boot 3.**
@@ -70,7 +85,7 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 
 > Assumption to confirm: all team members are comfortable with Java. If not, NestJS remains the main alternative.
 
-**Forecasting (FR-30, priority Could)** is implemented as a separate offline Python script (pandas, statsmodels or Prophet). It reads data from PostgreSQL and writes forecasts back, so it does not affect the backend language choice.
+**Forecasting (FR-30, priority Should)** is implemented as a separate offline Python script (pandas, statsmodels or Prophet). It reads data from PostgreSQL and writes forecasts back, so it does not affect the backend language choice.
 
 ---
 
@@ -155,7 +170,7 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 
 | Service | Alternatives considered | Choice | Reason |
 |---|---|---|---|
-| Payments | Kaspi QR (sandbox/mock), Halyk ePay, international providers (Stripe) | **Kaspi QR via an adapter, mock in the MVP** | Kaspi is the most widely used payment app in Kazakhstan, so families already have it. Real merchant access requires a registered legal entity, so the MVP uses a mock with the same interface (FR-17, out-of-scope note in DIP-8). The adapter allows Halyk to be added later |
+| Payments | Kaspi QR, Halyk ePay, international providers (Stripe) | **Kaspi QR via an adapter, sandbox (test environment) in the MVP** | Kaspi is the most widely used payment app in Kazakhstan, so families already have it. This follows the lesson from S3 in DIP-6: group buying succeeds when it uses the payment method people already have (WeChat Pay in China). Real payment processing is out of scope (DIP-2) and merchant access requires a registered legal entity, so the MVP uses the sandbox behind the same interface (FR-17). The adapter allows Halyk to be added later |
 | Maps | 2GIS, Google Maps, Yandex Maps | **2GIS** (alternative: Google Maps) | Detailed data on Kazakhstani cities, including buildings and entrances, which matters for pickup points in residential buildings. To be confirmed after checking SDK terms and access for students |
 | Push notifications | Firebase Cloud Messaging, OneSignal | **Firebase Cloud Messaging** | Free, works for both Android and iOS, official Flutter plugin and Java Admin SDK |
 | SMS codes | Local SMS providers, Firebase Phone Auth | **Firebase Phone Auth for the MVP** | Avoids contracting an SMS provider during the diploma. Can be replaced with a local provider later |
@@ -174,8 +189,8 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 | Database | PostgreSQL + PostGIS | SQL |
 | Background jobs | Quartz Scheduler (JDBC store), Spring events | Java |
 | File storage | S3-compatible object storage (MinIO locally) | — |
-| Forecasting (FR-30, Could) | Offline script (pandas, statsmodels or Prophet) | Python |
-| External | Kaspi QR (mock adapter), 2GIS, Firebase (FCM, Phone Auth) | — |
+| Baseline forecasting (FR-30, Should) | Offline script (pandas, statsmodels or Prophet) | Python |
+| External | Kaspi QR (sandbox, via adapter), 2GIS, Firebase (FCM, Phone Auth) | — |
 | Build and tests | Gradle, JUnit 5, Testcontainers, JaCoCo (coverage, NFR-11) | — |
 | Deployment and CI | Docker, Docker Compose, GitHub Actions | — |
 
@@ -188,7 +203,7 @@ Weights reflect how important a criterion is for this project (total = 100%). Th
 | Spring Boot requires a lot of configuration at the start | Generate the project with Spring Initializr. Build a small vertical slice (log in → view pools) in the first two weeks of implementation |
 | The team has no experience with Flutter | Dart is close to Java. Start with one screen and the API client before building all screens |
 | Backend (Java) and web portal (TypeScript) use different languages | Generate the TypeScript API client from the OpenAPI specification |
-| Kaspi API access is not available to students | Mock adapter with the same interface. The real integration is described but not required for the defense |
+| Kaspi API access is not available to students | If the official sandbox is not available, a local stub with the same PaymentProvider interface is used. Real payments are out of scope (DIP-2) |
 | 2GIS SDK licensing restrictions | Google Maps as a fallback. Map logic is hidden behind one widget |
 | The monolith grows too large | Spring Modulith verification tests for module boundaries, code review in Pull Requests |
 
