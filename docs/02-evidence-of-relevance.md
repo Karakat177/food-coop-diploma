@@ -30,73 +30,73 @@ The project addresses three related problems:
 
 ## 2.3 Primary Data: Interviews
 
-### 2.3.1 Participants
+### 2.3.1 Method
 
-| ID | Profile | Purpose |
-|----|---------|---------|
-| R1 | Parent in a large family (3+ children) | Primary user; cost of food |
-| R2 | Low-income household or TSA recipient | Budget constraints |
-| R3 | Building representative / head of condominium association (OSI/KSK) | Pool organiser and pick-up point |
-| R4 | Farmer, wholesale market seller or small distributor | Supplier: minimum order, volume discount |
-| R5 | Grocery store or bakery manager | Food sharing: write-offs and their causes |
+- **Format:** structured written interviews conducted via a messaging app (WhatsApp), October 2026.
+- **Participants:** 3 respondents from households in Kazakhstan, recruited through the author's personal network.
+- **Ethics:** participants were informed of the purpose of the study and agreed to take part anonymously. No names, IIN or addresses were recorded. The original messages are kept by the author.
 
-### 2.3.2 Protocol
+| ID | Household size | Usual place of purchase |
+|----|----------------|-------------------------|
+| R1 | 3 people | Supermarkets and local shops; bazaar when cheaper |
+| R2 | 3 people | Small (supermarket chain) |
+| R3 | 6 people | Supermarkets and a food bazaar |
 
-- Duration: 15–25 minutes, in person or online.
-- Verbal informed consent was obtained before each interview. No names, IIN or addresses were recorded.
-- Responses were recorded in note form close to the participant's words and summarised immediately after the session.
+### 2.3.2 Questions
 
-### 2.3.3 Interview Guide: Families (R1, R2)
+1. How many people are in your household, and where do you usually buy food?
+2. Approximately what share of your budget is spent on food? What has become most expensive?
+3. Have you ever bought food in bulk (a bag of flour, a case of oil) or together with neighbours? What prevented you?
+4. Would you use an app that lets neighbours buy together from a farmer 20–30% cheaper? What would stop you?
+5. Would you buy bread or dairy products close to their expiry date at a 50–70% discount?
+6. How do you prefer to pay (Kaspi QR, cash), and where would you like to collect your order?
 
-1. How many people are in your household? Who usually buys groceries?
-2. Where do you usually buy food (local shop, supermarket, bazaar, wholesale market, online)? Why there?
-3. Approximately what share of your family budget goes on food? Has it changed over the past year?
-4. Which products have become noticeably more expensive for you?
-5. Have you ever bought food in bulk (a bag of flour, a case of oil)? If not, what prevented you (upfront cost, storage, transport)?
-6. Have you ever bought together with neighbours or relatives? How did you split the cost and the goods? Were there any problems?
-7. How much do you trust neighbours in joint purchases? What would increase that trust?
-8. Would you use an app that brings neighbours together to buy from a farmer 20–30% cheaper than in a shop? What would stop you?
-9. How do you prefer to pay: Kaspi QR, bank transfer, cash?
-10. Would you buy products close to their expiry date (bread, dairy) at a 50–70% discount? Which products yes, which no?
-11. Where would it be convenient to collect an order: building entrance, building representative, condominium office, shop?
-12. Which language do you prefer for the app: Kazakh or Russian?
+### 2.3.3 Results
 
-### 2.3.4 Interview Guide: Other Stakeholders
+| Topic | R1 | R2 | R3 |
+|-------|----|----|----|
+| Food spending | 30–40% of budget | 20–30% (estimate; the mother does the shopping) | KZT 150,000–200,000 per month |
+| Largest price increases | Meat and vegetables | Not known | Affordable high-quality dairy is hard to find |
+| Bulk purchasing experience | Yes, at fairs; pooled 6–7 bags of sugar with neighbours and relatives in 2022–2023 | No | Yes, often; even fruit by the crate |
+| Barriers to bulk purchasing | Large upfront payment; lack of storage space | — | — |
+| Willingness to use the app | Yes, if the farmer is reliable and delivery is on time | Yes, would try it | Yes, gladly |
+| Near-expiry food at a discount | Yes, if it does not expire the same day and was stored properly | No, freshness matters more than price | No |
+| Payment method | Kaspi QR | Kaspi QR | Kaspi QR |
+| Collection preference | Home delivery | — | Delivery preferred; self-collection if a car is available |
 
-**Building representative (R3):** Is there a residents' chat and how active is it? Have joint purchases been organised before? Would you act as a pick-up point? What would you expect in return? What conflicts do you anticipate?
+### 2.3.4 Key Quotations
 
-**Supplier (R4):** What is your minimum order quantity? What is the difference between wholesale and retail prices? Do you sell to groups of buyers? How do you accept payment? What prevents you from selling directly to families? Would you deliver one combined order to a single point in a district?
+- **R1:** “In 2022–2023 we already chipped in with neighbours and relatives for 6–7 bags of sugar, so we have the experience. The main thing is that the farmer is reliable and the order arrives on time.”
+- **R1:** “What usually stops us is having to spend a large amount at once and having no space to store it.”
+- **R2:** “For me, freshness is more important than price.”
+- **R3:** “I would gladly use it, because it is hard to find quality dairy products at an affordable price.”
 
-**Retailer (R5):** How much product is written off per day or week? What happens to it now? Why is it not donated or sold at a discount? Would you list such products in an app two to three hours before closing?
+### 2.3.5 Summary of Findings
 
-### 2.3.5 Results
+1. **Demand for the core idea is confirmed.** All three respondents would use the collective purchasing app; two already buy in bulk, and one has organised a joint purchase with neighbours.
+2. **The main barriers are upfront cost and storage**, which the pool model addresses directly by splitting both cost and quantity.
+3. **Trust in the supplier and delivery reliability** are the key conditions for participation.
+4. **Kaspi QR is the unanimous payment preference.**
+5. **Home delivery is preferred** by two of three respondents over self-collection.
+6. **Acceptance of near-expiry food is low** (one of three, conditionally). Respondents associate it with poor freshness, so the food-sharing module must be positioned carefully.
+7. Reported food spending (20–40%) is lower than the national average of 57%. This is expected because the sample consists of urban households that do not belong to the low-income target group.
 
-| Topic | R1 | R2 | R3 | R4 | R5 | Finding |
-|-------|----|----|----|----|----|---------|
-| Main pain point | | | | | | |
-| Experience of joint purchasing | | | | | | |
-| Willingness to use the app (1–5) | | | | | | |
-| Preferred payment method | | | | | | |
-| Preferred pick-up point | | | | | | |
-| Preferred language | | | | | | |
+### 2.3.6 Limitations
 
-**Key quotations:**
-
-- R1: “…”
-- R2: “…”
-- R3: “…”
-- R4: “…”
-- R5: “…”
+The sample is small (n = 3) and consists of urban households from the author's personal network rather than low-income or large families. Suppliers, retailers and building representatives were not interviewed. The findings are therefore treated as exploratory and are complemented by the national statistics in Section 2.2.
 
 ## 2.4 Implications for Requirements
 
 | Finding | System requirement |
 |---------|--------------------|
-| Food is about 57% of spending; meat prices rise fastest | Catalogue prioritising SSFP; display savings against retail prices |
-| Wholesale batches are too large for one family | Purchase pools with automatic calculation of each family's share; pool closes when the target quantity is reached |
-| Low trust when one person collects money | Individual QR payment per family; funds released to the supplier only when the pool is complete; organiser rating |
-| Retail write-offs of edible food | Food-sharing module with time-limited discounted listings |
-| Users speak Kazakh and Russian | Bilingual interface (KZ/RU) |
+| Food is about 57% of spending nationally; meat prices rise fastest | Catalogue prioritising SSFP; display savings against retail prices |
+| Upfront cost and lack of storage prevent bulk buying (R1) | Purchase pools with automatic calculation of each family's share |
+| Previous joint purchases were organised manually (R1) | Pool creation, joining and closure handled by the system |
+| Supplier reliability and on-time delivery are key conditions (R1) | Supplier ratings and reviews; delivery date shown on each pool |
+| Kaspi QR preferred by all respondents | Individual payment by Kaspi QR for each family |
+| Home delivery preferred (R1, R3) | Pick-up point as default; optional supplier delivery to the address |
+| Freshness concerns about near-expiry food (R1, R2, R3) | Exact expiry date, storage conditions and photo shown for every food-sharing listing; listings removed before the expiry date |
+| Demand for affordable quality dairy (R3) | Dairy category from local farmers in the catalogue |
 | TSA is granted below the poverty line | Optional “social family” status with an additional discount, verified by an administrator |
 
 ## References
