@@ -1,7 +1,7 @@
 # Architecture and Diagrams
 
 **Project:** Information system for optimizing collective food purchasing and food redistribution
-**Owner:** Student B (241755) · **Status:** Draft v0.2
+**Owner:** Student B (241755) · **Status:** Draft v0.3
 **Related:** Proposal (`01-proposal.md`, DIP-2), Requirements (`06-requirements.md`, DIP-8), Technology comparison (`05-technology-comparison.md`, DIP-7), Verification plan (`09-verification-plan.md`, DIP-15)
 
 | Section | Diagram | Task | Status |
@@ -116,7 +116,7 @@ Both clients talk to the backend only through the REST API (HTTPS, JSON, JWT). T
 | Catalogue | Products, wholesale and tiered prices, minimum quantities, SSFP flag, retail reference prices | FR-06 … FR-08 | product, price_tier |
 | **Pools** | Pool life cycle (collecting → closed / cancelled → delivered), joining and leaving, **Share Calculator**, social discount, savings, merge suggestions | FR-09 … FR-16, FR-34, FR-35 | pickup_point, pool, pool_item, participation, participation_item |
 | **Payments** | QR per share via the PaymentProvider interface, payment status, refunds, idempotent webhook handling | FR-17 … FR-21, NFR-06 | payment |
-| Orders & Pick-up | Combined supplier order, delivery status, hand-over by pick-up QR | FR-19, FR-22, FR-23, FR-28 | supplier_order |
+| Orders & Pick-up | Combined supplier order, delivery status and expected delivery date, hand-over by pick-up QR, supplier rating and reviews, optional home delivery | FR-19, FR-22, FR-23, FR-28, FR-37, FR-38 | supplier_order, supplier_review |
 | Food-sharing | Near-expiry listings, reservations, early access for social families, daily limits | FR-24 … FR-27 | surplus_listing, reservation |
 | Notifications | Push messages via Firebase Cloud Messaging | FR-13, FR-22 | — |
 | Analytics | Sales statistics, savings and rescued-food report, display of forecasts | FR-29 … FR-31 | demand_forecast (read) |
@@ -184,6 +184,7 @@ The views in this document fit together as follows:
 | participation, participation_item | Pools | `share_amount` is calculated by the Share Calculator. Σ share_amount of PAID participations = supplier_order.total |
 | payment | Payments | `idempotency_key` is unique, so a repeated webhook cannot create a second payment |
 | supplier_order | Orders & Pick-up | At most one per pool; created only when the pool is CLOSED and all participations are PAID |
+| supplier_review | Orders & Pick-up | One review per family per completed pool: rating 1–5, comment, delivered on time (FR-37). Not shown on the draft data model diagram |
 | surplus_listing, reservation | Food-sharing | A reservation expires automatically at `pickup_to` |
 | demand_forecast | Analytics (written by the Forecast job) | One row per product, district and week |
 
@@ -245,10 +246,11 @@ All server components run in Docker containers started with Docker Compose: `bac
 
 | # | Open point | Depends on |
 |---|---|---|
-| 1 | Payment timeout (2 hours) and social discount values must be confirmed | Interview results (DIP-4) |
+| 1 | Payment timeout (2 hours) and social discount values must be confirmed with families from the target group | Additional interviews (DIP-4 covered 3 urban households only) |
 | 2 | 2GIS SDK licence terms for a student project; Google Maps is the fallback | Check before implementation |
-| 3 | Whether suppliers accept one combined order delivered to a building | Supplier interview (DIP-4, R4) |
-| 4 | Detailed sequence diagrams for Scenarios A and B | Next stage (pre-defence 2) |
+| 3 | Whether suppliers accept one combined order delivered to a building, and whether they offer delivery to individual addresses (FR-38) | Supplier interview (not yet conducted, DIP-4 2.3.6) |
+| 4 | Two of three respondents prefer home delivery (DIP-4). The architecture keeps the pick-up point as the default (AD-7) and supports optional supplier delivery only as a fee added to the share; this must be validated with the target group | Additional interviews, usability test (DIP-15) |
+| 5 | Detailed sequence diagrams for Scenarios A and B | Next stage (pre-defence 2) |
 
 ### References
 
