@@ -1,7 +1,7 @@
 // DIP-9 System Context Diagram
 // Project: Information system for optimizing collective food purchasing and food redistribution
 // Render: dot -Tpng -Gdpi=200 01-system-context.dot -o ../export/01-system-context.png
-// Interaction numbers (1-10) are explained in docs/07-architecture.md, section "System context".
+// Interaction numbers (1-9) are explained in docs/07-architecture.md, section "System context".
 
 digraph SystemContext {
     graph [rankdir=LR, splines=true, nodesep=0.35, ranksep=1.6, fontname="Helvetica",
@@ -13,10 +13,9 @@ digraph SystemContext {
         label=<<b>Users</b>>; fontsize=13; style="rounded,dashed"; color="#9DB7D8"; fontcolor="#2F6DB5"
         node [fillcolor="#E8F1FB", color="#2F6DB5", fontcolor="#0B2545", width=2.4]
         FAM  [label=<<b>Family</b><br/><font point-size="10">participant: joins pools,<br/>pays share, reserves food</font>>]
-        ORG  [label=<<b>Pool Organizer</b><br/><font point-size="10">resident / building representative</font>>]
+        ORG  [label=<<b>Pool Organiser</b><br/><font point-size="10">building representative / OSI / KSK,<br/>acts as the pick-up point</font>>]
         SUP  [label=<<b>Supplier</b><br/><font point-size="10">farmer / wholesaler / distributor</font>>]
-        PART [label=<<b>Food-sharing Partner</b><br/><font point-size="10">supermarket / bakery / canteen</font>>]
-        PICK [label=<<b>Pickup Point Operator</b><br/><font point-size="10">KSK / OSI / partner shop</font>>]
+        PART [label=<<b>Retailer / Bakery</b><br/><font point-size="10">publishes near-expiry products</font>>]
         ADM  [label=<<b>Administrator</b><br/><font point-size="10">moderator</font>>]
     }
 
@@ -26,22 +25,21 @@ digraph SystemContext {
     subgraph cluster_ext {
         label=<<b>External systems</b>>; fontsize=13; style="rounded,dashed"; color="#BBBBBB"; fontcolor="#555555"
         node [fillcolor="#F2F2F2", color="#777777", fontcolor="#222222", width=2.3]
-        KASPI [label=<<b>Kaspi QR</b><br/><font point-size="10">payment system<br/><i>(mock adapter in MVP)</i></font>>]
+        KASPI [label=<<b>Kaspi QR</b><br/><font point-size="10">payment system<br/><i>(sandbox in MVP)</i></font>>]
         MAPS  [label=<<b>2GIS</b><br/><font point-size="10">maps and geocoding</font>>]
         FCM   [label=<<b>Firebase</b><br/><font point-size="10">push notifications (FCM)<br/>SMS codes (Phone Auth)</font>>]
-        EGOV  [label=<<b>eGov / social assistance DB</b><br/><font point-size="10"><i>out of scope (Won't, FR-05)</i></font>>,
+        EGOV  [label=<<b>eGov / social assistance DB</b><br/><font point-size="10"><i>out of scope (FR-05)</i></font>>,
                style="rounded,dashed", fillcolor="white", color="#AAAAAA", fontcolor="#888888"]
     }
 
     FAM  -> SYS [label="1 · join pool, pay share,\nreserve food", dir=both]
-    ORG  -> SYS [label="2 · create pool"]
+    ORG  -> SYS [label="2 · create pool,\nconfirm hand-over (QR)"]
     SUP  -> SYS [label="3 · catalog, prices /\nconsolidated orders", dir=both]
-    PART -> SYS [label="4 · publish surplus food"]
-    PICK -> SYS [label="5 · confirm pickup (QR)"]
-    ADM  -> SYS [label="6 · approve suppliers,\nverify documents"]
+    PART -> SYS [label="4 · publish near-expiry\nproducts"]
+    ADM  -> SYS [label="5 · approve suppliers,\nverify social status"]
 
-    SYS -> KASPI [label="7 · payment QR /\nconfirmation", dir=both]
-    SYS -> MAPS  [label="8 · maps, geocoding"]
-    SYS -> FCM   [label="9 · push, SMS codes"]
-    SYS -> EGOV  [label="10 · not integrated", style=dashed, color="#AAAAAA", fontcolor="#888888"]
+    SYS -> KASPI [label="6 · payment QR /\nconfirmation", dir=both]
+    SYS -> MAPS  [label="7 · maps, geocoding"]
+    SYS -> FCM   [label="8 · push, SMS codes"]
+    SYS -> EGOV  [label="9 · not integrated", style=dashed, color="#AAAAAA", fontcolor="#888888"]
 }
