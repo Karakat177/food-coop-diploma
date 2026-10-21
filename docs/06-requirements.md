@@ -1,7 +1,7 @@
 # Requirements Specification
 
 **Project:** Information system for optimizing collective food purchasing and food redistribution
-**Task:** DIP-8 · **Owner:** Student B · **Status:** Draft v0.2 (aligned with DIP-2, DIP-4, DIP-6, DIP-10, DIP-15; to be refined after interview results)
+**Task:** DIP-8 · **Owner:** Student B · **Status:** Draft v0.3 (aligned with DIP-2, DIP-4 interview results, DIP-6, DIP-10, DIP-15)
 **Based on:** Project proposal (`01-proposal.md`, DIP-2), Evidence of relevance (`02-evidence-of-relevance.md`, DIP-4), Existing systems comparison (`04-existing-systems-comparison.md`, DIP-6)
 **Used by:** Technology comparison (DIP-7), diagrams (DIP-9, DIP-10, DIP-11), UX prototype (DIP-14), Verification plan (`09-verification-plan.md`, DIP-15)
 
@@ -29,7 +29,7 @@ Delivered as:
 Family registration and district/building selection; supplier catalogue with wholesale prices and minimum order quantities; pool creation and joining with automatic share calculation and automatic closure when the target is reached; QR payment per family (Kaspi in sandbox mode); combined order to the supplier; map of pick-up points; food-sharing module; supplier web portal; "social family" status with manual verification; baseline demand forecast for SSFP by district.
 
 ### 1.3 Out of scope (from DIP-2)
-- In-house delivery service and warehousing. Suppliers deliver the combined order to the pick-up point.
+- In-house delivery service and warehousing. Suppliers deliver the combined order to the pick-up point. Home delivery was preferred by two of three interview respondents (DIP-4); it is covered only as an optional supplier service (FR-38, Could).
 - Live integration with government databases (TSA, eGov). Replaced by document upload and manual verification (FR-04).
 - Real payment processing. Kaspi QR works in a sandbox / test environment only.
 - Sale of alcohol, tobacco and medicines.
@@ -89,7 +89,7 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 
 | ID | Requirement | Priority | Source | Acceptance criteria |
 |---|---|---|---|---|
-| FR-09 | A Pool Organiser creates a pool: supplier, products, target quantity (not less than the supplier's minimum order), pick-up point and deadline | M | DIP-2 scope, S3, UC "Create pool" | The pool is created with status "Collecting" and is visible to families in the district |
+| FR-09 | A Pool Organiser creates a pool: supplier, products, target quantity (not less than the supplier's minimum order), pick-up point, deadline and expected delivery date | M | DIP-2 scope, S3, UC "Create pool", DIP-4 (R1: on-time delivery) | The pool is created with status "Collecting" and is visible to families in the district. The expected delivery date is shown on the pool card |
 | FR-10 | Families see nearby pools and pick-up points on a map and in a list | M | DIP-2 scope, DIP-6 C7, UC "Find pick-up point" | Pools within the selected radius (default 2 km) are shown with fill progress. Pick-up points are shown with address and opening hours |
 | FR-11 | A family joins a pool by choosing its quantity of each product and paying its share (FR-17) | M | DIP-2 scope, DIP-6 C1, UC "Join pool" | The pool fill progress updates after payment. A family cannot request more than the remaining quantity (DIP-15 T6) |
 | FR-12 | The system automatically calculates each family's share: cost of its items at the pool price, minus the social discount if applicable (FR-34) | M | DIP-2 objective O3, DIP-6 C2, UC "Calculate family share" | The sum of all shares equals the supplier order total exactly (0 ₸ difference after rounding). Rounding remainders are assigned to the Pool Organiser's share. DIP-15 tests T1, T2, T4 pass |
@@ -119,7 +119,7 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 
 | ID | Requirement | Priority | Source | Acceptance criteria |
 |---|---|---|---|---|
-| FR-24 | A Retailer / Bakery publishes near-expiry products: name, quantity, discounted price (0 for free), expiry date and pick-up window | M | DIP-2 scope, DIP-4, DIP-6 C4, S1, UC "Publish near-expiry product" | The item is visible to families in the district until it is fully reserved or the pick-up window ends |
+| FR-24 | A Retailer / Bakery publishes near-expiry products: name, photo, quantity, discounted price (0 for free), exact expiry date, storage conditions and pick-up window | M | DIP-2 scope, DIP-4 (freshness concerns of R1–R3), DIP-6 C4, S1, UC "Publish near-expiry product" | The listing cannot be published without a photo, expiry date and storage conditions. The item is visible until it is fully reserved or the pick-up window ends, and is removed automatically before the expiry date |
 | FR-25 | A family reserves an item. The reservation expires if the item is not collected within the pick-up window | M | S1, UC "Reserve surplus item" | The reserved quantity is unavailable to others. After the window, the item becomes available again (DIP-15 T7) |
 | FR-26 | Families with verified social status get early access to free items (for example, 30 minutes before other users) | S | DIP-6 adopted feature from S5 | During the first 30 minutes, a family without status cannot reserve the item |
 | FR-27 | Limit of free reservations per family per day | S | Fair distribution | A family cannot hold more than N active free reservations (N is configurable, default 2) |
@@ -140,6 +140,8 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 | FR-34 | A Supplier can set a social discount (%) in a pool for families with verified social status. The discount is applied in the share calculation | S | DIP-4 ("additional discount"), DIP-6 conclusion, DIP-15 T5 | With a 5% social discount, the share of a social family is reduced by 5%, and the totals still match the supplier order (FR-12) |
 | FR-35 | Each pool shows the family's savings compared with the average district retail price (BNS SSFP monitoring) | S | DIP-2 objective O1, DIP-4 ("display savings against retail prices") | The pool screen shows retail price, pool price and savings in ₸ and % for each product |
 | FR-36 | Participants can rate the Pool Organiser (1–5) after a completed pool | C | DIP-4 ("organiser rating") | The average rating is shown on the Organiser's pools |
+| FR-37 | After a completed pool, participants rate the Supplier (1–5) and can leave a short review on quality and delivery time | S | DIP-4 (R1: "the farmer is reliable and the order arrives on time"), Liu et al. (2013) | The supplier card shows the average rating, the number of reviews and the share of orders delivered on time |
+| FR-38 | Optional delivery by the Supplier from the pool to a family's address for an extra fee set by the Supplier | C | DIP-4 (R1, R3 prefer home delivery) | If the Supplier offers delivery, the family can choose it when joining; the delivery fee is added to its share. Pick-up point remains the default |
 
 ### 4.9 Administration
 
@@ -193,7 +195,7 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 | UC15 Verify social status | Administrator | FR-04, FR-05 | Admin module | NFR-05 access test |
 | UC16 Moderate suppliers | Administrator | FR-02, FR-32 | Admin module | Integration test |
 
-> Not shown as separate use cases in DIP-10: savings display (FR-35), organiser rating (FR-36), pick-up point management (FR-33). They can be added to the diagram or kept as part of UC3, UC10 and UC16.
+> Not shown as separate use cases in DIP-10: savings display (FR-35), organiser and supplier ratings (FR-36, FR-37), optional home delivery (FR-38), pick-up point management (FR-33). They can be added to the diagram or kept as part of UC3, UC10, UC12 and UC16.
 
 ### 6.2 DIP-6 criteria → requirements
 
@@ -211,28 +213,43 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 
 ---
 
-## 7. Open questions (to be answered by the interviews, DIP-4)
+## 7. Interview findings and open questions (DIP-4)
 
-| # | Question | Interview guide question (DIP-4) | Affects |
+### 7.1 Findings already reflected in the requirements
+
+Interviews with three households (DIP-4, section 2.3) are exploratory (n = 3, urban households, not the low-income target group). Verified findings and the requirements they affect:
+
+| Finding (DIP-4, 2.3.5) | Respondents | Requirements | Status |
 |---|---|---|---|
-| 1 | Who usually takes the Pool Organiser role: an active resident, the building representative or OSI/KSK? | R3 guide | FR-09, FR-23 |
-| 2 | Is it acceptable to pay when joining a pool (with refund if the pool is cancelled)? What payment timeout is acceptable? | Families Q7, Q9 | FR-17, FR-20, FR-21 |
-| 3 | What minimum order quantities and price tiers do suppliers actually use for flour, potatoes, oil and sugar? | R4 guide | FR-06, FR-07, O1 |
-| 4 | Are retailers ready to list near-expiry products daily, two to three hours before closing? | R5 guide | FR-24, FR-25 |
-| 5 | Which pick-up location is most convenient? | Families Q11, R3 guide | FR-10, FR-33 |
-| 6 | Which document is acceptable to confirm social status? Would suppliers give an additional social discount? | Families Q3, R4 guide | FR-04, FR-34 |
+| Demand for collective purchasing; upfront cost and storage are the main barriers | R1, R2, R3 | FR-09 … FR-12 | Confirmed |
+| Kaspi QR is the preferred payment method | R1, R2, R3 | FR-17 | Confirmed |
+| Supplier reliability and on-time delivery are key conditions | R1 | FR-09 (delivery date), FR-37 (supplier rating) | Added in v0.3 |
+| Home delivery is preferred over self-collection | R1, R3 | FR-38 (optional, Could); pick-up point stays the default | Added in v0.3 — conflicts with the scope in DIP-2, see 7.2 |
+| Low acceptance of near-expiry food; freshness matters more than price | R1, R2, R3 | FR-24 (photo, storage conditions, removal before expiry) | Added in v0.3 |
+| Demand for affordable quality dairy | R3 | FR-06, FR-08 (dairy category in the catalogue) | Covered by catalogue content |
 
----
+### 7.2 Open questions
+
+Suppliers, retailers and building representatives were not interviewed (DIP-4, 2.3.6), so the following questions remain open:
+
+| # | Question | Who to ask | Affects |
+|---|---|---|---|
+| 1 | Who usually takes the Pool Organiser role, and would a building representative or OSI/KSK act as a pick-up point? | Building representative / OSI (R3 guide) | FR-09, FR-23 |
+| 2 | Is it acceptable to pay when joining a pool (with refund if the pool is cancelled)? What payment timeout is acceptable? | Families | FR-17, FR-20, FR-21 |
+| 3 | What minimum order quantities and price tiers do suppliers use for flour, potatoes, oil and sugar? Would they deliver one combined order to a building, or to individual addresses for a fee? | Suppliers (R4 guide) | FR-06, FR-07, FR-38, objective O1 |
+| 4 | Are retailers ready to list near-expiry products daily, with photo and storage conditions? | Retailers / bakeries (R5 guide) | FR-24, FR-25 |
+| 5 | Given the preference for home delivery, is a pick-up point in the building acceptable if it is within walking distance? | Families from the target group | FR-10, FR-38 |
+| 6 | Which document is acceptable to confirm social status? Would suppliers give an additional social discount? | Families from the target group, suppliers | FR-04, FR-34 |
 
 ## 8. Summary
 
 | Priority | Functional | Non-functional |
 |---|---|---|
 | Must | 22 | 7 |
-| Should | 12 | 5 |
-| Could | 1 | 1 |
+| Should | 13 | 5 |
+| Could | 2 | 1 |
 | Won't | 1 | 0 |
-| **Total** | **36** | **13** |
+| **Total** | **38** | **13** |
 
 ---
 
@@ -248,3 +265,4 @@ The *Source* column shows where the requirement comes from: DIP-2 scope item, DI
 | v0.2 | Added savings display (FR-35) and organiser rating (FR-36) | DIP-2 objective O1, DIP-4 |
 | v0.2 | NFR-02 changed to 1 s at 100 concurrent requests; NFR-08 changed to "within 3 minutes, ≥ 80%"; added NFR-10 (SUS); NFR-04 covers portal passwords | Consistency with DIP-2 objectives and DIP-15 |
 | v0.2 | Out of scope extended (alcohol, tobacco, medicines; one pilot district in Astana); added objectives, sources and traceability to DIP-6 and DIP-10 | DIP-2, DIP-6, DIP-10 |
+| v0.3 | Added interview findings (DIP-4): expected delivery date on pools (FR-09), supplier rating and reviews (FR-37), optional home delivery by the supplier (FR-38), photo, storage conditions and automatic removal for near-expiry listings (FR-24). Open questions updated: questions answered by the interviews moved to 7.1 | DIP-4 interview results (commit a02170d) |
