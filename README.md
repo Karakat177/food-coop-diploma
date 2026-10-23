@@ -18,12 +18,12 @@ Food cooperatives and neighbour groups usually coordinate purchases through mess
 ## Team and roles
 | Member | GitHub | Role | Responsibility |
 |---|---|---|---|
-|Ospanali Akbota| … | Analyst | Proposal, evidence of relevance, literature review, existing systems comparison |
-| Mernibek Zharkynai| … | Architect / backend lead | Technology comparison, requirements, architecture and diagrams, verification plan |
+| Ospanali Akbota | [@akbota2007](https://github.com/akbota2007) | Analyst | Proposal, evidence of relevance, literature review, existing systems comparison |
+| Mernibek Zharkynai | [@Zharrkynn](https://github.com/Zharrkynn) | Architect / backend lead | Technology comparison, requirements, architecture and diagrams, verification plan |
 | Karakat Ibraim | [@Karakat177](https://github.com/Karakat177) | UX designer / project manager | Prototype, repository, project management and risks, supervisor feedback |
 
-**Supervisor:** …
-Orynbek Alibek
+**Supervisor:** Orynbek Alibek
+
 ## Scope and status
 **In scope:** user registration and roles; creating and joining group purchases; cost calculation; surplus board (offer and claim); notifications about purchase status.
 **Out of scope:** online payments, delivery logistics, native mobile apps.
@@ -31,7 +31,6 @@ Orynbek Alibek
 **Current status (pre-defense 1):** project proposal, evidence of relevance, literature review, system and technology comparisons, requirements, architecture diagrams, prototype, verification plan and project plan are prepared. Implementation starts next.
 
 ## Technologies
-<!-- verify against docs/05-technology-comparison.md -->
 - Backend: Java, Spring Boot (REST API)
 - Database: PostgreSQL
 - Frontend: web application (responsive)
