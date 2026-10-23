@@ -1,0 +1,99 @@
+// DIP-12 Conceptual data model (draft) — main entities and relations
+// Render: dot -Tpng -Gdpi=140 04-data-model.dot -o ../export/04-data-model.png
+// Described in docs/07-architecture.md, section 4.3. Money: NUMERIC(12,2) in DB, BigDecimal in Java (NFR-07).
+
+digraph DataModel {
+    graph [rankdir=LR, fontname="Helvetica", label=<<b>Conceptual Data Model (draft) — Food Coop Platform</b>>, labelloc=t, fontsize=18, pad=0.3, nodesep=0.3, ranksep=0.8]
+    node  [shape=plain, fontname="Helvetica", fontsize=10]
+    edge  [fontname="Helvetica", fontsize=9, color="#555555", arrowhead=crow, arrowtail=tee, dir=both]
+
+    subgraph cluster_users { label=<<b>Users &amp; Auth</b>>; style="rounded,dashed"; color="#9DB7D8"; fontcolor="#2F6DB5"
+    user [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>app_user</b></td></tr>
+        <tr><td align="left">id · role (FAMILY / SUPPLIER / RETAILER / ADMIN)</td></tr>
+        <tr><td align="left">phone · email · password_hash</td></tr>
+        <tr><td align="left">district_id · building · family_size</td></tr>
+        <tr><td align="left">social_status (NONE / PENDING / VERIFIED)</td></tr></table>>]
+    sapp [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>social_status_application</b></td></tr>
+        <tr><td align="left">id · user_id · document_key (object storage)</td></tr>
+        <tr><td align="left">status · reviewed_by · reason</td></tr></table>>]
+    }
+
+    subgraph cluster_cat { label=<<b>Catalogue</b>>; style="rounded,dashed"; color="#9DB7D8"; fontcolor="#2F6DB5"
+    product [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>product</b></td></tr>
+        <tr><td align="left">id · supplier_id · name_kk · name_ru</td></tr>
+        <tr><td align="left">category · unit · is_ssfp</td></tr>
+        <tr><td align="left">wholesale_price · min_order_qty · available_qty</td></tr>
+        <tr><td align="left">retail_reference_price (BNS)</td></tr></table>>]
+    tier [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>price_tier</b></td></tr>
+        <tr><td align="left">product_id · from_qty · price</td></tr></table>>]
+    }
+
+    subgraph cluster_pools { label=<<b>Pools · Payments · Orders</b>>; style="rounded,dashed"; color="#1F5FAD"; fontcolor="#1F5FAD"
+    pp [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>pickup_point</b></td></tr>
+        <tr><td align="left">id · address · location (PostGIS)</td></tr>
+        <tr><td align="left">organiser_id · opening_hours</td></tr></table>>]
+    pool [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#D6E6F8"><b>pool</b></td></tr>
+        <tr><td align="left">id · organiser_id · supplier_id · pickup_point_id</td></tr>
+        <tr><td align="left">deadline · social_discount_pct</td></tr>
+        <tr><td align="left">status (COLLECTING / CLOSED / CANCELLED / DELIVERED)</td></tr></table>>]
+    pitem [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>pool_item</b></td></tr>
+        <tr><td align="left">pool_id · product_id · target_qty · unit_price</td></tr></table>>]
+    part [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#D6E6F8"><b>participation</b></td></tr>
+        <tr><td align="left">id · pool_id · family_id · share_amount</td></tr>
+        <tr><td align="left">status (AWAITING_PAYMENT / PAID / REFUNDED / COLLECTED)</td></tr>
+        <tr><td align="left">pickup_qr_token</td></tr></table>>]
+    pqty [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>participation_item</b></td></tr>
+        <tr><td align="left">participation_id · product_id · qty</td></tr></table>>]
+    pay [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#D6E6F8"><b>payment</b></td></tr>
+        <tr><td align="left">id · participation_id · amount</td></tr>
+        <tr><td align="left">provider_ref · idempotency_key (unique)</td></tr>
+        <tr><td align="left">status (PENDING / PAID / REFUNDED)</td></tr></table>>]
+    ord [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>supplier_order</b></td></tr>
+        <tr><td align="left">id · pool_id (unique) · supplier_id · total</td></tr>
+        <tr><td align="left">status (NEW / CONFIRMED / DELIVERED)</td></tr></table>>]
+    }
+
+    subgraph cluster_fs { label=<<b>Food-sharing</b>>; style="rounded,dashed"; color="#9DB7D8"; fontcolor="#2F6DB5"
+    lst [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>surplus_listing</b></td></tr>
+        <tr><td align="left">id · retailer_id · name · qty · price</td></tr>
+        <tr><td align="left">expiry_date · pickup_from · pickup_to</td></tr>
+        <tr><td align="left">location (PostGIS) · early_access_until</td></tr></table>>]
+    res [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#E8F1FB"><b>reservation</b></td></tr>
+        <tr><td align="left">id · listing_id · family_id · qty</td></tr>
+        <tr><td align="left">status (ACTIVE / COLLECTED / EXPIRED)</td></tr></table>>]
+    }
+
+    fc [label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="3" bgcolor="white">
+        <tr><td bgcolor="#FFF6E5"><b>demand_forecast</b></td></tr>
+        <tr><td align="left">product_id · district_id · week · qty · model</td></tr></table>>]
+
+    user -> sapp   [label="1 : N"]
+    user -> product [label="supplier 1 : N"]
+    product -> tier [label="1 : N"]
+    user -> pool   [label="organiser 1 : N"]
+    pp -> pool     [label="1 : N"]
+    pool -> pitem  [label="1 : N"]
+    product -> pitem [label="1 : N"]
+    pool -> part   [label="1 : N"]
+    user -> part   [label="family 1 : N"]
+    part -> pqty   [label="1 : N"]
+    part -> pay    [label="1 : N"]
+    pool -> ord    [label="1 : 0..1"]
+    user -> lst    [label="retailer 1 : N"]
+    lst -> res     [label="1 : N"]
+    user -> res    [label="family 1 : N"]
+    product -> fc  [label="1 : N"]
+}

@@ -1,0 +1,102 @@
+// DIP-11 Component Diagram (draft)
+// Project: Information system for optimizing collective food purchasing and food redistribution
+// Render: dot -Tpng -Gdpi=140 03-component.dot -o ../export/03-component.png
+// Components and modules are described in docs/07-architecture.md, section 3.
+// Technology choices: docs/05-technology-comparison.md (DIP-7). Requirement IDs: docs/06-requirements.md (DIP-8).
+
+digraph Components {
+    graph [rankdir=TB, compound=true, newrank=true, splines=spline, nodesep=0.35, ranksep=0.55,
+           fontname="Helvetica", label=<<b>Component Diagram (draft) — Food Coop Platform</b>>, labelloc=t, fontsize=20, pad=0.4]
+    node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", margin="0.15,0.08", width=2.5]
+    edge  [fontname="Helvetica", fontsize=9, color="#555555", fontcolor="#333333", arrowsize=0.7]
+
+    // ================= Clients =================
+    subgraph cluster_clients {
+        label=<<b>Clients</b>>; style="rounded,dashed"; color="#9DB7D8"; fontcolor="#2F6DB5"; fontsize=13
+        node [fillcolor="#E8F1FB", color="#2F6DB5", fontcolor="#0B2545"]
+        MOB [label=<<b>Mobile App</b><br/><font point-size="9">Flutter (Dart) · Android / iOS · KZ / RU<br/>Family, Pool Organiser</font>>]
+        WEB [label=<<b>Web Portal</b><br/><font point-size="9">React (TypeScript) · KZ / RU<br/>Supplier, Retailer / Bakery, Administrator</font>>]
+    }
+
+    // ================= Backend =================
+    subgraph cluster_backend {
+        label=<<b>Backend — Spring Boot modular monolith (Java 21)</b>>; style="rounded"; color="#1F5FAD"; penwidth=2; fontcolor="#1F5FAD"; fontsize=13
+
+        API [label=<<b>REST API layer</b><br/><font point-size="9">Spring MVC controllers · OpenAPI (springdoc)<br/>Spring Security: JWT, roles · webhook endpoint</font>>,
+             fillcolor="#1F5FAD", color="#0B3D78", fontcolor="white", width=3.4]
+        SCH [label=<<b>Scheduler</b><br/><font point-size="9">Quartz (JDBC job store)<br/>pool deadline · payment timeout ·<br/>reservation expiry</font>>,
+             fillcolor="#FFF6E5", color="#C98A1B", fontcolor="#4A3200"]
+
+        subgraph cluster_modules {
+            label=<<b>Application modules</b> <font point-size="9">(Spring Modulith: modules call each other through interfaces and Spring events)</font>>;
+            style="rounded,filled"; fillcolor="#F4F8FD"; color="#9DB7D8"; fontcolor="#2F6DB5"; fontsize=11
+            node [fillcolor="white", color="#2F6DB5", fontcolor="#0B2545"]
+            USR  [label=<<b>Users &amp; Auth</b><br/><font point-size="9">registration, district, social status<br/>FR-01…FR-04</font>>]
+            CAT  [label=<<b>Catalogue</b><br/><font point-size="9">products, wholesale &amp; tiered prices, SSFP<br/>FR-06…FR-08</font>>]
+            POOL [label=<<b>Pools</b><br/><font point-size="9">create / join / close / cancel<br/><b>Share Calculator</b> (BigDecimal), savings<br/>FR-09…FR-16, FR-34, FR-35</font>>, penwidth=2.2]
+            FS   [label=<<b>Food-sharing</b><br/><font point-size="9">near-expiry listings, reservations,<br/>early access, limits · FR-24…FR-27</font>>]
+
+            PAY  [label=<<b>Payments</b><br/><font point-size="9">QR per share, status, refunds,<br/>idempotency · FR-17…FR-21, NFR-06</font>>, penwidth=2.2]
+            ORD  [label=<<b>Orders &amp; Pick-up</b><br/><font point-size="9">combined order, delivery, hand-over QR<br/>FR-19, FR-22, FR-23, FR-28</font>>]
+            NTF  [label=<<b>Notifications</b><br/><font point-size="9">push messages<br/>FR-13, FR-22</font>>]
+            ANL  [label=<<b>Analytics</b><br/><font point-size="9">sales stats, savings report,<br/>forecast display · FR-29…FR-31</font>>]
+            ADM  [label=<<b>Administration</b><br/><font point-size="9">moderation, pick-up points<br/>FR-32, FR-33</font>>]
+        }
+
+        KADP [label=<<b>Kaspi Adapter</b><br/><font point-size="9">PaymentProvider interface<br/>sandbox implementation in MVP</font>>,
+              fillcolor="#FFF6E5", color="#C98A1B", fontcolor="#4A3200"]
+    }
+
+    // ================= Data =================
+    subgraph cluster_data {
+        label=<<b>Data stores</b>>; style="rounded,dashed"; color="#7FB685"; fontcolor="#2E7D32"; fontsize=13
+        node [shape=cylinder, style="filled", fillcolor="#EAF6EC", color="#2E7D32", fontcolor="#123D16", width=2.4]
+        DB  [label=<<b>PostgreSQL + PostGIS</b><br/><font point-size="9">one schema per module · Flyway<br/>Quartz tables · forecasts</font>>]
+        OBJ [label=<<b>Object storage (MinIO)</b><br/><font point-size="9">social status documents<br/>Administrators only (NFR-05)</font>>]
+    }
+    FC [label=<<b>Forecast job</b><br/><font point-size="9">offline Python script<br/>baseline model (FR-30)</font>>, fillcolor="#FFF6E5", color="#C98A1B", fontcolor="#4A3200"]
+
+    // ================= External =================
+    subgraph cluster_ext {
+        label=<<b>External systems</b>>; style="rounded,dashed"; color="#BBBBBB"; fontcolor="#555555"; fontsize=13
+        node [fillcolor="#F2F2F2", color="#777777", fontcolor="#222222", width=2.0]
+        KASPI [label=<<b>Kaspi QR</b><br/><font point-size="9">sandbox</font>>]
+        GIS   [label=<<b>2GIS</b><br/><font point-size="9">map SDK, geocoding</font>>]
+        FCM   [label=<<b>Firebase</b><br/><font point-size="9">FCM push · Phone Auth (SMS)</font>>]
+    }
+
+    // ================= Layout (rows) =================
+    { rank=same; MOB; WEB }
+    { rank=same; API; SCH }
+    { rank=same; USR; CAT; POOL; FS }
+    { rank=same; PAY; ORD; NTF; ANL; ADM }
+    { rank=same; KADP; DB; OBJ; FC }
+    { rank=same; KASPI; GIS; FCM }
+    USR -> CAT -> POOL -> FS [style=invis]
+    PAY -> ORD -> NTF -> ANL -> ADM [style=invis]
+    KADP -> DB -> OBJ -> FC [style=invis]
+    KASPI -> GIS -> FCM [style=invis]
+
+    // ================= Interactions =================
+    MOB -> API [label="HTTPS / REST + JWT"]
+    WEB -> API [label="HTTPS / REST + JWT"]
+    API -> POOL [lhead=cluster_modules, label="calls module services"]
+    SCH -> FS   [lhead=cluster_modules, label="timed jobs"]
+
+    POOL -> CAT  [label="prices, min. qty"]
+    POOL -> USR  [label="social status", constraint=false]
+    POOL -> PAY  [label="request QR"]
+    PAY  -> POOL [label="PaymentConfirmed", style=dashed]
+    POOL -> ORD  [label="PoolClosed", style=dashed]
+    ORD  -> NTF  [xlabel="OrderReady", style=dashed]
+    PAY  -> KADP
+    KADP -> KASPI [label="create QR, refund /\npayment webhook", dir=both]
+
+    ORD -> DB  [ltail=cluster_modules, color="#2E7D32", fontcolor="#2E7D32", label="JPA / Hibernate Spatial"]
+    SCH -> DB  [color="#2E7D32", fontcolor="#2E7D32", label="job store", constraint=false]
+    ADM -> OBJ [ltail=cluster_modules, color="#2E7D32", fontcolor="#2E7D32", label="documents"]
+    FC  -> DB  [color="#C98A1B", fontcolor="#8A5A00", label="reads orders,\nwrites forecasts", constraint=false]
+
+    NTF -> FCM [ltail=cluster_modules, label="send push"]
+    ANL -> GIS [ltail=cluster_modules, label="geocode address"]
+}
